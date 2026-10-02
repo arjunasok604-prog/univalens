@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UNIVA LENS | Cinematic Storytelling & Commercial Videography (Aluva)</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Syne, Plus Jakarta Sans, and JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,800;1,300&family=Syne:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- GSAP & ScrollTrigger CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --bg-primary: #070709;
+      --bg-secondary: #0e0e13;
+      --gold-accent: #e5a93b;
+      --gold-glow: rgba(229, 169, 59, 0.28);
+      --silver-glow: rgba(255, 255, 255, 0.12);
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: #e2e8f0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    .font-syne {
+      font-family: 'Syne', sans-serif;
+    }
+
+    .font-mono-code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Film Grain Simulation Overlay */
+    .film-grain {
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.038'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      mix-blend-mode: overlay;
+    }
+
+    /* Letterbox Anamorphic Framing */
+    .anamorphic-bar-top {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: clamp(6px, 1.2vw, 15px);
+      background: #000000;
+      z-index: 100;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .anamorphic-bar-bottom {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100vw;
+      height: clamp(6px, 1.2vw, 15px);
+      background: #000000;
+      z-index: 100;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Cinematic Smooth Cursor */
+    .cursor-dot {
+      pointer-events: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 7px;
+      height: 7px;
+      background: #e5a93b;
+      border-radius: 50%;
+      z-index: 1000;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, background-color 0.2s;
+    }
+
+    .cursor-outline {
+      pointer-events: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 44px;
+      height: 44px;
+      border: 1px solid rgba(229, 169, 59, 0.4);
+      border-radius: 50%;
+      z-index: 999;
+      transform: translate(-50%, -50%);
+      transition: width 0.25s, height 0.25s, border-color 0.25s, background-color 0.25s;
+    }
+
+    /* Glass Effect Utilities */
+    .glass-card {
+      background: linear-gradient(135deg, rgba(18, 18, 26, 0.72) 0%, rgba(10, 10, 15, 0.92) 100%);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-pill {
+      background: rgba(18, 18, 24, 0.85);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .bg-grid-pattern {
+      background-size: 52px 52px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    }
+
+    .text-stroke-gold {
+      -webkit-text-stroke: 1px rgba(229, 169, 59, 0.35);
+      color: transparent;
+    }
+
+    .glow-gold-sm {
+      box-shadow: 0 0 25px rgba(229, 169, 59, 0.22);
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #08080a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #252532;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #e5a93b;
+    }
+
+    @media (max-width: 768px) {
+      .cursor-dot, .cursor-outline {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="selection:bg-amber-500/30 selection:text-amber-200 relative bg-[#070709] text-zinc-100">
+
+  <!-- Visual Film Overlays -->
+  <div class="film-grain"></div>
+  <div class="anamorphic-bar-top"></div>
+  <div class="anamorphic-bar-bottom"></div>
+
+  <!-- Custom Hardware Cursor -->
+  <div id="cursor-dot" class="cursor-dot"></div>
+  <div id="cursor-outline" class="cursor-outline flex items-center justify-center"></div>
+
+  <!-- Audio Tone Synthesizer Floating Controller -->
+  <div class="fixed bottom-6 right-6 z-50 flex items-center gap-3">
+    <button id="sound-toggle-btn" class="glass-pill px-3.5 py-2 rounded-full flex items-center gap-2.5 text-xs font-mono-code text-zinc-300 hover:text-amber-400 hover:border-amber-500/40 transition group shadow-2xl">
+      <div class="flex items-end gap-[2px] h-3.5 w-3.5">
+        <span class="w-[2px] bg-amber-400 h-1 audio-bar transition-all group-hover:bg-amber-300"></span>
+        <span class="w-[2px] bg-amber-400 h-3 audio-bar transition-all group-hover:bg-amber-300"></span>
+        <span class="w-[2px] bg-amber-400 h-2 audio-bar transition-all group-hover:bg-amber-300"></span>
+      </div>
+      <span id="sound-state-text" class="tracking-widest uppercase text-[10px]">SOUND OFF</span>
+    </button>
+  </div>
+
+  <!-- Top Real-Time Cinema HUD -->
+  <div class="fixed top-3 left-6 right-6 z-40 flex items-center justify-between text-[11px] font-mono-code tracking-widest text-zinc-500 pointer-events-none">
+    <div class="flex items-center gap-3">
+      <span class="inline-flex items-center gap-1.5 text-red-500 font-semibold">
+        <span class="h-2 w-2 rounded-full bg-red-500 animate-pulse"></span> REC
+      </span>
+      <span class="hidden md:inline text-zinc-400">ALUVA • 10.1076° N, 76.3516° E</span>
+    </div>
+    <div class="flex items-center gap-5">
+      <span class="hidden sm:inline">DISPATCH: arjunasok604@gmail.com</span>
+      <span class="text-amber-400 font-bold" id="live-timecode">00:00:00:00</span>
+      <span class="text-zinc-400">24.00 FPS</span>
+    </div>
+  </div>
+
+  <!-- Main Floating Header Navigation -->
+  <header class="fixed top-8 left-1/2 -translate-x-1/2 z-40 w-[94%] max-w-7xl">
+    <nav class="glass-card px-5 py-3 rounded-full flex items-center justify-between shadow-2xl border border-white/10 transition-all duration-300">
+      
+      <!-- Brand Crest -->
+      <a href="#hero" class="flex items-center gap-3 group">
+        <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-600 via-amber-400 to-amber-200 p-[1px] shadow-lg group-hover:scale-105 transition transform">
+          <div class="w-full h-full bg-[#0b0b10] rounded-full flex items-center justify-center">
+            <i data-lucide="camera" class="w-4 h-4 text-amber-400 group-hover:rotate-12 transition"></i>
+          </div>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-1.5">
+            <span class="font-syne text-sm font-black tracking-wider text-white uppercase group-hover:text-amber-300 transition">UNIVA LENS</span>
+            <span class="h-1.5 w-1.5 rounded-full bg-amber-400"></span>
+          </div>
+          <span class="text-[9px] font-mono-code tracking-widest text-zinc-400 uppercase">CINEMATOGRAPHY</span>
+        </div>
+      </a>
+
+      <!-- Desktop Links -->
+      <div class="hidden md:flex items-center gap-7 font-mono-code text-xs uppercase tracking-wider text-zinc-300">
+        <a href="#about" class="hover:text-amber-400 transition py-1">01. Identity</a>
+        <a href="#showcase" class="hover:text-amber-400 transition py-1">02. Works</a>
+        <a href="#gear" class="hover:text-amber-400 transition py-1">03. Telemetry</a>
+        <a href="#contact" class="hover:text-amber-400 transition py-1 text-amber-400 font-semibold">04. Dispatch Shoot</a>
+      </div>
+
+      <!-- Action Cluster -->
+      <div class="flex items-center gap-3">
+        <!-- Direct Instagram CTA -->
+        <a href="https://www.instagram.com/univalens?stkn=ZnB2NmY1aGJwNG52&utm_source=qr" 
+           target="_blank" 
+           rel="noopener noreferrer"
+           class="group relative inline-flex items-center gap-2 px-4 py-2 rounded-full overflow-hidden text-xs font-mono-code font-bold tracking-wider uppercase text-zinc-950 bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 shadow-md hover:shadow-amber-500/25 transition duration-300 hover:scale-[1.02] active:scale-95">
+          <i data-lucide="instagram" class="w-3.5 h-3.5 text-zinc-950 group-hover:scale-110 transition"></i>
+          <span class="hidden sm:inline">DM @univalens</span>
+          <span class="sm:hidden">IG</span>
+          <i data-lucide="arrow-up-right" class="w-3 h-3 text-zinc-950"></i>
+        </a>
+
+        <!-- Mobile Drawer Toggle -->
+        <button id="mobile-menu-btn" class="md:hidden p-2 text-zinc-300 hover:text-white rounded-lg focus:outline-none">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-drawer" class="hidden md:hidden glass-card mt-2 rounded-2xl p-5 border border-white/10 flex flex-col gap-3 text-xs font-mono-code uppercase tracking-widest text-zinc-300">
+      <a href="#about" class="mobile-link py-2 border-b border-white/5 flex items-center justify-between">
+        <span>01. Identity</span> <i data-lucide="chevron-right" class="w-4 h-4 text-amber-400"></i>
+      </a>
+      <a href="#showcase" class="mobile-link py-2 border-b border-white/5 flex items-center justify-between">
+        <span>02. Works & Reels</span> <i data-lucide="chevron-right" class="w-4 h-4 text-amber-400"></i>
+      </a>
+      <a href="#gear" class="mobile-link py-2 border-b border-white/5 flex items-center justify-between">
+        <span>03. Hardware Telemetry</span> <i data-lucide="chevron-right" class="w-4 h-4 text-amber-400"></i>
+      </a>
+      <a href="#contact" class="mobile-link py-2 text-amber-400 flex items-center justify-between">
+        <span>04. Dispatch Shoot (Email / IG)</span> <i data-lucide="arrow-right" class="w-4 h-4 text-amber-400"></i>
+      </a>
+    </div>
+  </header>
+
+  <section id="hero" class="relative min-h-screen flex flex-col justify-between pt-28 pb-12 px-6 sm:px-12 overflow-hidden bg-grid-pattern">
+    
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] bg-gradient-to-tr from-amber-500/10 via-amber-400/5 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+
+    <!-- Aperture Mechanical Graphic -->
+    <div id="hero-aperture" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] h-[340px] sm:w-[500px] sm:h-[500px] lg:w-[620px] lg:h-[620px] rounded-full border border-zinc-800 pointer-events-none z-0 flex items-center justify-center opacity-30">
+      <div class="w-[85%] h-[85%] rounded-full border border-dashed border-amber-500/30 flex items-center justify-center animate-spin" style="animation-duration: 90s;">
+        <div class="w-[70%] h-[70%] rounded-full border border-zinc-700/60"></div>
+      </div>
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="w-24 h-24 rounded-full border border-amber-400/40 bg-amber-400/5 backdrop-blur-sm"></div>
+      </div>
+    </div>
+
+    <!-- Top Status Banner -->
+    <div class="relative z-10 max-w-7xl mx-auto w-full pt-4 flex flex-wrap items-center justify-between gap-4">
+      <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full glass-card border border-amber-500/20 text-xs font-mono-code text-amber-300">
+        <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-400"></i>
+        <span>ALUVA, KERALA • AVAILABLE WORLDWIDE</span>
+      </div>
+
+      <div class="hidden sm:flex items-center gap-6 font-mono-code text-xs text-zinc-400">
+        <span class="flex items-center gap-1.5"><i data-lucide="clapperboard" class="w-3.5 h-3.5 text-amber-400"></i> BRAND FILMS</span>
+        <span class="flex items-center gap-1.5"><i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i> EDITORIAL REELS</span>
+        <span class="flex items-center gap-1.5"><i data-lucide="video" class="w-3.5 h-3.5 text-amber-400"></i> COMMERCIALS</span>
+      </div>
+    </div>
+
+    <!-- Typography Headline -->
+    <div class="relative z-10 max-w-7xl mx-auto w-full my-auto py-12">
+      <p class="font-mono-code text-xs sm:text-sm tracking-[0.3em] uppercase text-amber-400/90 mb-3 hero-elem">
+        UNIVALENS CINEMATOGRAPHY COLLECTIVE
+      </p>
+
+      <h1 class="font-syne text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter uppercase leading-[0.88] hero-elem">
+        FRAMING <span class="text-stroke-gold">SOUL</span><br>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600">IN MOTION.</span>
+      </h1>
+
+      <div class="mt-8 flex flex-col md:flex-row md:items-end justify-between gap-8 hero-elem">
+        <p class="max-w-xl text-base sm:text-lg text-zinc-400 leading-relaxed font-light">
+          We architect commercial films, brand narratives, and viral reels with high dynamic range color science and intentional camera movement. Based in Aluva.
+        </p>
+
+        <!-- CTA Cluster -->
+        <div class="flex flex-wrap items-center gap-4">
+          <a href="#contact" class="px-7 py-3.5 rounded-full bg-zinc-100 text-zinc-950 font-mono-code text-xs font-bold uppercase tracking-wider hover:bg-amber-400 hover:scale-105 transition-all flex items-center gap-2 group shadow-xl">
+            <i data-lucide="mail" class="w-3.5 h-3.5 fill-current"></i>
+            <span>Send Direct Shoot Brief</span>
+          </a>
+
+          <a href="https://www.instagram.com/univalens?stkn=ZnB2NmY1aGJwNG52&utm_source=qr" target="_blank" rel="noopener noreferrer" class="glass-pill px-6 py-3.5 rounded-full font-mono-code text-xs uppercase tracking-wider text-zinc-300 hover:text-amber-400 hover:border-amber-400/40 transition flex items-center gap-2.5">
+            <i data-lucide="instagram" class="w-4 h-4 text-amber-400"></i>
+            <span>@univalens (Instagram)</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Telemetry Specs -->
+    <div class="relative z-10 max-w-7xl mx-auto w-full pt-6 border-t border-zinc-900 flex flex-wrap items-center justify-between gap-4 font-mono-code text-[11px] text-zinc-500">
+      <div class="flex items-center gap-4">
+        <span>SHUTTER: 180° (1/48s)</span>
+        <span>•</span>
+        <span>ISO: 800 DUAL NATIVE</span>
+        <span>•</span>
+        <span>DISPATCH ID: ARJUNASOK604</span>
+      </div>
+
+      <a href="#about" class="inline-flex items-center gap-2 text-zinc-400 hover:text-amber-400 transition animate-bounce">
+        <span>EXPLORE ARCHIVE</span>
+        <i data-lucide="arrow-down" class="w-3.5 h-3.5 text-amber-400"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- Stats & Verification Strip -->
+  <section class="py-6 border-y border-zinc-900 bg-[#09090d] relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-6 flex flex-wrap items-center justify-between gap-6">
+      
+      <div class="flex items-center gap-4">
+        <div class="h-10 w-10 rounded-full bg-gradient-to-tr from-amber-500 to-amber-200 flex items-center justify-center p-[2px]">
+          <div class="w-full h-full bg-[#08080a] rounded-full flex items-center justify-center">
+            <i data-lucide="trending-up" class="w-4 h-4 text-amber-400"></i>
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-syne text-xl font-bold text-white">5.6K+</span>
+            <span class="text-xs font-mono-code px-1.5 py-0.5 rounded bg-emerald-950/60 text-emerald-400 border border-emerald-500/30">? 30 Days</span>
+          </div>
+          <p class="text-xs text-zinc-400 font-mono-code">Audience View Reach on Reels</p>
+        </div>
+      </div>
+
+      <a href="https://www.instagram.com/univalens?stkn=ZnB2NmY1aGJwNG52&utm_source=qr" 
+         target="_blank" 
+         rel="noopener noreferrer" 
+         class="flex items-center gap-3 px-5 py-2.5 rounded-xl glass-card hover:border-amber-400/40 transition group">
+        <i data-lucide="camera" class="w-4 h-4 text-amber-400 group-hover:scale-110 transition"></i>
+        <div class="text-left">
+          <p class="text-xs font-bold text-white group-hover:text-amber-300 font-mono-code flex items-center gap-1.5">
+            instagram.com/univalens
+            <i data-lucide="external-link" class="w-3 h-3 text-zinc-400"></i>
+          </p>
+          <p class="text-[10px] text-zinc-400">DM for dates & creative sync</p>
+        </div>
+      </a>
+
+      <div class="flex items-center gap-3 font-mono-code text-xs text-zinc-400">
+        <span class="h-2 w-2 rounded-full bg-amber-400"></span>
+        <span>Email: arjunasok604@gmail.com</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Identity Section -->
+  <section id="about" class="py-24 sm:py-32 px-6 sm:px-12 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto">
+      
+      <div class="flex items-center gap-3 font-mono-code text-xs uppercase tracking-widest text-amber-400 mb-6">
+        <span class="h-[1px] w-8 bg-amber-400"></span>
+        <span>01 // IDENTITY & PHILOSOPHY</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+        <div class="lg:col-span-7">
+          <h2 class="font-syne text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight">
+            We don't simply record events. We sculpt <span class="text-amber-400 italic">cinematic memory</span>.
+          </h2>
+          <p class="mt-6 text-zinc-400 text-base sm:text-lg leading-relaxed font-light">
+            Founded in Aluva, <strong class="text-zinc-200 font-medium">UNIVA LENS</strong> is an independent cinematography unit. From 9:16 high-impact social edits to large-scale commercial narratives, our workflow is grounded in DaVinci Resolve color science, custom optical primes, and tailored sound engineering.
+          </p>
+
+          <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="glass-card p-6 rounded-2xl hover:border-amber-500/30 transition group">
+              <div class="w-10 h-10 rounded-xl bg-amber-400/10 flex items-center justify-center text-amber-400 mb-4 group-hover:scale-110 transition">
+                <i data-lucide="film" class="w-5 h-5"></i>
+              </div>
+              <h3 class="font-syne text-lg font-bold text-white mb-2">Anamorphic Texture</h3>
+              <p class="text-xs text-zinc-400 leading-normal font-mono-code">
+                Streaking horizontal flares, creamy elliptical bokeh, and wide 2.39:1 ratio for cinematic gravity.
+              </p>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl hover:border-amber-500/30 transition group">
+              <div class="w-10 h-10 rounded-xl bg-amber-400/10 flex items-center justify-center text-amber-400 mb-4 group-hover:scale-110 transition">
+                <i data-lucide="sliders" class="w-5 h-5"></i>
+              </div>
+              <h3 class="font-syne text-lg font-bold text-white mb-2">Bespoke Color Science</h3>
+              <p class="text-xs text-zinc-400 leading-normal font-mono-code">
+                Dedicated film-stock emulation curves providing organic skin tones and unclipped natural highlights.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 flex flex-col gap-5">
+          <div class="glass-card p-8 rounded-3xl border border-zinc-800 relative overflow-hidden">
+            <div class="flex items-center justify-between pb-6 border-b border-zinc-800">
+              <div class="font-mono-code text-xs text-zinc-400">STUDIO TELEMETRY</div>
+              <span class="text-xs font-mono-code text-emerald-400 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> BOOKINGS OPEN
+              </span>
+            </div>
+
+            <div class="mt-6 space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-mono-code text-zinc-400">STUDIO BASE</span>
+                <span class="text-sm font-semibold text-white">Aluva, Kerala</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-mono-code text-zinc-400">DIRECT EMAIL</span>
+                <a href="mailto:arjunasok604@gmail.com" class="text-xs font-mono-code text-amber-400 hover:underline">arjunasok604@gmail.com</a>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-mono-code text-zinc-400">RESOLUTION</span>
+                <span class="text-sm font-mono-code text-amber-400 font-bold">4K DCI / 6K RAW</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-mono-code text-zinc-400">INSTAGRAM</span>
+                <a href="https://www.instagram.com/univalens?stkn=ZnB2NmY1aGJwNG52&utm_source=qr" target="_blank" rel="noopener noreferrer" class="text-xs font-mono-code text-amber-400 hover:underline">@univalens</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-pill p-6 rounded-2xl border-l-4 border-l-amber-400 flex items-center gap-4">
+            <i data-lucide="quote" class="w-8 h-8 text-amber-400/40 shrink-0"></i>
+            <p class="text-xs text-zinc-300 font-mono-code italic leading-relaxed">
+              "We shoot with precision so that your audience doesn't just watch — they feel."
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="showcase" class="py-24 sm:py-32 px-6 sm:px-12 bg-[#09090e] border-t border-zinc-900 relative">
+    <div class="max-w-7xl mx-auto">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div>
+          <div class="flex items-center gap-3 font-mono-code text-xs uppercase tracking-widest text-amber-400 mb-2">
+            <span class="h-[1px] w-8 bg-amber-400"></span>
+            <span>02 // CURATED SHOWCASE</span>
+          </div>
+          <h2 class="font-syne text-3xl sm:text-5xl font-black text-white uppercase tracking-tight">
+            WORKS & REEL ARCHIVE
+          </h2>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2 font-mono-code text-xs">
+          <button class="portfolio-filter-btn px-4 py-2 rounded-full glass-card text-amber-400 border-amber-400/50" data-filter="all">ALL [06]</button>
+          <button class="portfolio-filter-btn px-4 py-2 rounded-full glass-card text-zinc-400 hover:text-white" data-filter="commercial">COMMERCIALS</button>
+          <button class="portfolio-filter-btn px-4 py-2 rounded-full glass-card text-zinc-400 hover:text-white" data-filter="brand">BRAND FILMS</button>
+          <button class="portfolio-filter-btn px-4 py-2 rounded-full glass-card text-zinc-400 hover:text-white" data-filter="reel">CREATIVE REELS</button>
+        </div>
+      </div>
+
+      <!-- Portfolio Grid Items -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="portfolio-items-grid">
+        
+        <!-- Card 1 -->
+        <div class="portfolio-card group relative rounded-3xl overflow-hidden glass-card border border-white/5 transition-all duration-500 hover:-translate-y-2 hover:border-amber-500/40" data-category="brand">
+          <div class="relative aspect-[16/10] overflow-hidden bg-zinc-900">
+            <img src="https://images.unsplash.com/photo-1536240478700-b869070f9279?auto=format&fit=crop&w=1000&q=80" 
+                 alt="The Monolith | Luxury Brand Film" 
+                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 filter brightness-90 group-hover:brightness-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#08080a] via-transparent to-black/30"></div>
+            <div class="absolute top-4 left-4 flex items-center gap-2">
+              <span class="px-2.5 py-1 rounded-md glass-pill text-[10px] font-mono-code font-bold text-amber-400 uppercase">BRAND FILM</span>
+            </div>
+            <button onclick="openVideoModal('The Monolith', 'Brand Narrative Film for Luxury Horology', 'Arri Alexa Mini LF • Cooke Anamorphic 40mm')" class="absolute inset-0 m-auto w-14 h-14 rounded-full bg-amber-400/90 text-zinc-950 flex items-center justify-center opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-300 shadow-2xl">
+              <i data-lucide="play" class="w-6 h-6 fill-current translate-x-0.5"></i>
+            </button>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center justify-between text-xs font-mono-code text-zinc-500 mb-2">
+              <span>LOC: KOCHI / ALUVA</span>
+              <span>2:39:1 SCOPE</span>
+            </div>
+            <h3 class="font-syne text-xl font-bold text-white group-hover:text-amber-400 transition">THE MONOLITH</h3>
+            <p class="mt-2 text-xs text-zinc-400 font-mono-code leading-relaxed">
+              Sculpted shadows and micro fog texture capturing master craftsman watches.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="portfolio-card group relative rounded-3xl overflow-hidden glass-card border border-white/5 transition-all duration-500 hover:-translate-y-2 hover:border-amber-500/40" data-category="commercial">
+          <div class="relative aspect-[16/10] overflow-hidden bg-zinc-900">
+            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1000&q=80" 
+                 alt="Veloce Apex | Automotive Commercial" 
+                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 filter brightness-90 group-hover:brightness-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#08080a] via-transparent to-black/30"></div>
+            <div class="absolute top-4 left-4 flex items-center gap-2">
+              <span class="px-2.5 py-1 rounded-md glass-pill text-[10px] font-mono-code font-bold text-amber-400 uppercase">COMMERCIAL</span>
+            </div>
+            <button onclick="openVideoModal('Veloce Apex', 'Automotive Performance Campaign', 'Sony FX6 • Cine Gimbal Rig • 24mm Prime')" class="absolute inset-0 m-auto w-14 h-14 rounded-full bg-amber-400/90 text-zinc-950 flex items-center justify-center opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-300 shadow-2xl">
+              <i data-lucide="play" class="w-6 h-6 fill-current translate-x-0.5"></i>
+            </button>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center justify-between text-xs font-mono-code text-zinc-500 mb-2">
+              <span>CATEGORY: AUTOMOTIVE</span>
+              <span>120 FPS</span>
+            </div>
+            <h3 class="font-syne text-xl font-bold text-white group-hover:text-amber-400 transition">VELOCE APEX</h3>
+            <p class="mt-2 text-xs text-zinc-400 font-mono-code leading-relaxed">
+              Dusk pursuit tracking shots highlighting wet tarmac and clean aerodynamic lines.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="portfolio-card group relative rounded-3xl overflow-hidden glass-card border border-white/5 transition-all duration-500 hover:-translate-y-2 hover:border-amber-500/40" data-category="reel">
+          <div class="relative aspect-[16/10] overflow-hidden bg-zinc-900">
+            <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1000&q=80" 
+                 alt="Neon Nocturne | Creative Instagram Reel" 
+                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 filter brightness-90 group-hover:brightness-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#08080a] via-transparent to-black/30"></div>
+            <div class="absolute top-4 left-4 flex items-center gap-2">
+              <span class="px-2.5 py-1 rounded-md glass-pill text-[10px] font-mono-code font-bold text-amber-400 uppercase">VIRAL REEL (9:16)</span>
+            </div>
+            <button onclick="openVideoModal('Neon Nocturne', 'Editorial Street Fashion Reel for Instagram', 'Blackmagic 6K Pro • 35mm Vintage Glass')" class="absolute inset-0 m-auto w-14 h-14 rounded-full bg-amber-400/90 text-zinc-950 flex items-center justify-center opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-300 shadow-2xl">
+              <i data-lucide="play" class="w-6 h-6 fill-current translate-x-0.5"></i>
+            </button>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center justify-between text-xs font-mono-code text-zinc-500 mb-2">
+              <span>STYLE: STREETWEAR</span>
+              <span>450K VIEWS</span>
+            </div>
+            <h3 class="font-syne text-xl font-bold text-white group-hover:text-amber-400 transition">NEON NOCTURNE</h3>
+            <p class="mt-2 text-xs text-zinc-400 font-mono-code leading-relaxed">
+              Snappy edits and tailored sub-bass hits tuned for instant visual attention.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="portfolio-card group relative rounded-3xl overflow-hidden glass-card border border-white/5 transition-all duration-500 hover:-translate-y-2 hover:border-amber-500/40" data-category="commercial">
+          <div class="relative aspect-[16/10] overflow-hidden bg-zinc-900">
+            <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1000&q=80" 
+                 alt="Resonance | Audio Brand Commercial" 
+                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 filter brightness-90 group-hover:brightness-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#08080a] via-transparent to-black/30"></div>
+            <div class="absolute top-4 left-4 flex items-center gap-2">
+              <span class="px-2.5 py-1 rounded-md glass-pill text-[10px] font-mono-code font-bold text-amber-400 uppercase">COMMERCIAL</span>
+            </div>
+            <button onclick="openVideoModal('Resonance Audio', 'Acoustic Equipment Launch Film', 'Red Komodo 6K • Zeiss Supreme Primes')" class="absolute inset-0 m-auto w-14 h-14 rounded-full bg-amber-400/90 text-zinc-950 flex items-center justify-center opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-300 shadow-2xl">
+              <i data-lucide="play" class="w-6 h-6 fill-current translate-x-0.5"></i>
+            </button>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center justify-between text-xs font-mono-code text-zinc-500 mb-2">
+              <span>TYPE: PRODUCT LAUNCH</span>
+              <span>MACRO 100MM</span>
+            </div>
+            <h3 class="font-syne text-xl font-bold text-white group-hover:text-amber-400 transition">RESONANCE STUDIO</h3>
+            <p class="mt-2 text-xs text-zinc-400 font-mono-code leading-relaxed">
+              Macro driver vibration in slow motion synchronized to 40Hz acoustic ripples.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="portfolio-card group relative rounded-3xl overflow-hidden glass-card border border-white/5 transition-all duration-500 hover:-translate-y-2 hover:border-amber-500/40" data-category="brand">
+          <div class="relative aspect-[16/10] overflow-hidden bg-zinc-900">
+            <img src="https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?auto=format&fit=crop&w=1000&q=80" 
+                 alt="Kerala Monsoons | Cultural Docu-Film" 
+                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 filter brightness-90 group-hover:brightness-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#08080a] via-transparent to-black/30"></div>
+            <div class="absolute top-4 left-4 flex items-center gap-2">
+              <span class="px-2.5 py-1 rounded-md glass-pill text-[10px] font-mono-code font-bold text-amber-400 uppercase">DOCUMENTARY</span>
+            </div>
+            <button onclick="openVideoModal('Monsoon Whispers', 'Documentary on Periyar River Life in Aluva', 'Sony FX3 • Sirui Anamorphic 50mm')" class="absolute inset-0 m-auto w-14 h-14 rounded-full bg-amber-400/90 text-zinc-950 flex items-center justify-center opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-300 shadow-2xl">
+              <i data-lucide="play" class="w-6 h-6 fill-current translate-x-0.5"></i>
+            </button>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center justify-between text-xs font-mono-code text-zinc-500 mb-2">
+              <span>LOCATION: ALUVA</span>
+              <span>ANAMORPHIC</span>
+            </div>
+            <h3 class="font-syne text-xl font-bold text-white group-hover:text-amber-400 transition">MONSOON WHISPERS</h3>
+            <p class="mt-2 text-xs text-zinc-400 font-mono-code leading-relaxed">
+              Misty rainscapes, dawn fishing boats, and raw ambient sound recorded along the Periyar river.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="portfolio-card group relative rounded-3xl overflow-hidden glass-card border border-white/5 transition-all duration-500 hover:-translate-y-2 hover:border-amber-500/40" data-category="reel">
+          <div class="relative aspect-[16/10] overflow-hidden bg-zinc-900">
+            <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1000&q=80" 
+                 alt="High Fashion Editorial Reel" 
+                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 filter brightness-90 group-hover:brightness-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#08080a] via-transparent to-black/30"></div>
+            <div class="absolute top-4 left-4 flex items-center gap-2">
+              <span class="px-2.5 py-1 rounded-md glass-pill text-[10px] font-mono-code font-bold text-amber-400 uppercase">REEL / LOOKBOOK</span>
+            </div>
+            <button onclick="openVideoModal('Avant-Garde Silhouette', 'Couture Fashion Lookbook Campaign', 'Blackmagic Cinema • Contax Zeiss Set')" class="absolute inset-0 m-auto w-14 h-14 rounded-full bg-amber-400/90 text-zinc-950 flex items-center justify-center opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-300 shadow-2xl">
+              <i data-lucide="play" class="w-6 h-6 fill-current translate-x-0.5"></i>
+            </button>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center justify-between text-xs font-mono-code text-zinc-500 mb-2">
+              <span>STYLE: LOOKBOOK</span>
+              <span>GRAIN 16MM</span>
+            </div>
+            <h3 class="font-syne text-xl font-bold text-white group-hover:text-amber-400 transition">AVANT-GARDE TEXTURE</h3>
+            <p class="mt-2 text-xs text-zinc-400 font-mono-code leading-relaxed">
+              Speed ramps and analog film warmth crafted for fashion house launches.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <section id="gear" class="py-24 sm:py-32 px-6 sm:px-12 relative overflow-hidden bg-grid-pattern">
+    <div class="max-w-7xl mx-auto">
+      
+      <div class="flex items-center gap-3 font-mono-code text-xs uppercase tracking-widest text-amber-400 mb-4">
+        <span class="h-[1px] w-8 bg-amber-400"></span>
+        <span>03 // OPTICAL & ARSENAL TELEMETRY</span>
+      </div>
+
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+        <div>
+          <h2 class="font-syne text-3xl sm:text-5xl font-black text-white uppercase tracking-tight">
+            CALIBRATED CINEMA HARDWARE
+          </h2>
+          <p class="text-zinc-400 text-sm font-mono-code mt-2">
+            No compromises: Large-format cinema sensors, anamorphic glass, and studio lighting.
+          </p>
+        </div>
+        <div class="text-xs font-mono-code text-zinc-500 border border-zinc-800 px-4 py-2 rounded-xl glass-card">
+          STATUS: <span class="text-emerald-400">PRODUCTION READY</span>
+        </div>
+      </div>
+
+      <!-- Gear Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="glass-card p-6 rounded-2xl border border-zinc-800 hover:border-amber-400/40 transition">
+          <div class="text-xs font-mono-code text-zinc-500 mb-6 flex justify-between">
+            <span>SENSORS</span> <i data-lucide="video" class="w-4 h-4 text-amber-400"></i>
+          </div>
+          <h3 class="font-syne text-xl font-bold text-white">Cinema Bodies</h3>
+          <p class="mt-2 text-xs font-mono-code text-zinc-400 leading-relaxed">
+            High dynamic range cinema sensors capturing 14+ stops of natural highlight roll-off.
+          </p>
+          <div class="mt-6 pt-4 border-t border-zinc-800 text-[11px] font-mono-code text-amber-400">
+            • 4K DCI / 6K RAW Capture<br>• ProRes 422 HQ Color
+          </div>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl border border-zinc-800 hover:border-amber-400/40 transition">
+          <div class="text-xs font-mono-code text-zinc-500 mb-6 flex justify-between">
+            <span>OPTICS</span> <i data-lucide="disc" class="w-4 h-4 text-amber-400"></i>
+          </div>
+          <h3 class="font-syne text-xl font-bold text-white">Anamorphic & Primes</h3>
+          <p class="mt-2 text-xs font-mono-code text-zinc-400 leading-relaxed">
+            T1.5 fast primes yielding smooth cinematic bokeh and vintage lens character.
+          </p>
+          <div class="mt-6 pt-4 border-t border-zinc-800 text-[11px] font-mono-code text-amber-400">
+            • 24mm, 35mm, 50mm, 85mm<br>• De-clicked Cine Focus
+          </div>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl border border-zinc-800 hover:border-amber-400/40 transition">
+          <div class="text-xs font-mono-code text-zinc-500 mb-6 flex justify-between">
+            <span>GIMBALS</span> <i data-lucide="compass" class="w-4 h-4 text-amber-400"></i>
+          </div>
+          <h3 class="font-syne text-xl font-bold text-white">Dynamic Tracking</h3>
+          <p class="mt-2 text-xs font-mono-code text-zinc-400 leading-relaxed">
+            3-Axis algorithmic motor stabilizers coupled with 4K aerial drone systems.
+          </p>
+          <div class="mt-6 pt-4 border-t border-zinc-800 text-[11px] font-mono-code text-amber-400">
+            • Motorized Focus Wheels<br>• High-Altitude 4K Drones
+          </div>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl border border-zinc-800 hover:border-amber-400/40 transition">
+          <div class="text-xs font-mono-code text-zinc-500 mb-6 flex justify-between">
+            <span>LIGHT & SOUND</span> <i data-lucide="sun" class="w-4 h-4 text-amber-400"></i>
+          </div>
+          <h3 class="font-syne text-xl font-bold text-white">Studio Bi-Color</h3>
+          <p class="mt-2 text-xs font-mono-code text-zinc-400 leading-relaxed">
+            High CRI 98+ continuous COB softboxes and 32-bit float wireless audio microphones.
+          </p>
+          <div class="mt-6 pt-4 border-t border-zinc-800 text-[11px] font-mono-code text-amber-400">
+            • 300W Bowens Point Lights<br>• 32-Bit Float Lavalier Mics
+          </div>
+        </div>
+      </div>
+
+      <!-- Realtime DOF Optical Dial Simulator -->
+      <div class="mt-12 glass-card p-6 sm:p-8 rounded-3xl border border-zinc-800">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="max-w-md">
+            <span class="text-xs font-mono-code text-amber-400 uppercase tracking-widest">Interactive Lens Blade Simulator</span>
+            <h4 class="font-syne text-xl font-bold text-white mt-1">Realtime Depth of Field Dial</h4>
+            <p class="text-xs font-mono-code text-zinc-400 mt-2">
+              Scrub the slider to simulate optical aperture changes and background bokeh depth.
+            </p>
+          </div>
+
+          <div class="w-full md:w-auto flex-1 max-w-lg flex flex-col gap-4">
+            <div class="flex items-center justify-between font-mono-code text-xs">
+              <span class="text-zinc-400">IRIS VALUE:</span>
+              <span id="aperture-val-display" class="text-amber-400 font-bold text-base">f / 1.4</span>
+              <span id="aperture-dof-display" class="text-zinc-400">ULTRA SHALLOW BOKEH</span>
+            </div>
+            <input id="aperture-slider" type="range" min="1.4" max="16" step="0.2" value="1.4" 
+                   class="w-full accent-amber-400 bg-zinc-800 h-2 rounded-lg cursor-pointer">
+            <div class="flex justify-between font-mono-code text-[10px] text-zinc-600">
+              <span>f/1.4 (Max Bokeh)</span>
+              <span>f/4.0 (Commercial)</span>
+              <span>f/8.0 (Studio)</span>
+              <span>f/16 (Deep Focus)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="contact" class="py-24 sm:py-32 px-6 sm:px-12 relative overflow-hidden bg-grid-pattern">
+    
+    <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[750px] h-[500px] bg-amber-500/10 rounded-full blur-[140px] pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto relative z-10">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+        
+        <!-- Left Column: Contact Channel Information -->
+        <div class="lg:col-span-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-3 font-mono-code text-xs uppercase tracking-widest text-amber-400 mb-4">
+              <span class="h-[1px] w-8 bg-amber-400"></span>
+              <span>04 // INITIATE TRANSMISSION</span>
+            </div>
+
+            <h2 class="font-syne text-4xl sm:text-6xl font-black text-white uppercase tracking-tight leading-tight">
+              COMMISSION YOUR <span class="text-amber-400">FILM.</span>
+            </h2>
+
+            <p class="mt-6 text-zinc-400 text-sm sm:text-base font-light leading-relaxed">
+              Have an upcoming commercial, brand film, creative reel, or music video? Submit the inquiry form to dispatch your brief directly to our primary production inbox (<span class="text-zinc-200 font-mono-code">arjunasok604@gmail.com</span>), or message our Instagram handle.
+            </p>
+
+            <!-- Instagram Card Direct Callout -->
+            <div class="mt-8 glass-card p-6 rounded-3xl border border-amber-500/30 glow-gold-sm">
+              <div class="flex items-center gap-4 mb-3">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 via-amber-400 to-amber-200 flex items-center justify-center p-[2px]">
+                  <div class="w-full h-full bg-[#09090d] rounded-2xl flex items-center justify-center">
+                    <i data-lucide="instagram" class="w-6 h-6 text-amber-400"></i>
+                  </div>
+                </div>
+                <div>
+                  <h4 class="font-syne text-lg font-bold text-white">Direct Instagram Access</h4>
+                  <p class="text-xs font-mono-code text-amber-400">@univalens • Live Direct Messages</p>
+                </div>
+              </div>
+              
+              <p class="text-xs font-mono-code text-zinc-400 leading-relaxed mb-5">
+                Prefer social messaging? Connect with our team directly in Aluva via Instagram.
+              </p>
+
+              <a href="https://www.instagram.com/univalens?stkn=ZnB2NmY1aGJwNG52&utm_source=qr" 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 class="w-full py-3 px-5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 text-zinc-950 font-mono-code text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-95 transition shadow-lg">
+                <i data-lucide="message-square" class="w-4 h-4 text-zinc-950"></i>
+                <span>Open Instagram DM (@univalens)</span>
+                <i data-lucide="arrow-up-right" class="w-4 h-4 text-zinc-950"></i>
+              </a>
+            </div>
+
+            <!-- Email & Studio Meta -->
+            <div class="mt-6 space-y-3 font-mono-code text-xs text-zinc-400">
+              <div class="flex items-center gap-3">
+                <i data-lucide="mail" class="w-4 h-4 text-amber-400"></i>
+                <span>Direct Inbox: arjunasok604@gmail.com</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i data-lucide="map-pin" class="w-4 h-4 text-amber-400"></i>
+                <span>Aluva, Kerala, India (Pin 683101)</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i data-lucide="clock" class="w-4 h-4 text-amber-400"></i>
+                <span id="live-ist-clock">IST Local Time: Calculating...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Interactive Shoot Inquiry Terminal with Email Backend -->
+        <div class="lg:col-span-7">
+          <div class="glass-card p-8 sm:p-10 rounded-3xl border border-zinc-800 shadow-2xl relative">
+            
+            <div class="flex items-center justify-between pb-6 border-b border-zinc-800 mb-8 font-mono-code text-xs text-zinc-400">
+              <span class="flex items-center gap-2">
+                <span class="h-2 w-2 rounded-full bg-amber-400"></span> DIRECT SHOOT TRANSMISSION
+              </span>
+              <span class="text-zinc-500">TARGET: arjunasok604@gmail.com</span>
+            </div>
+
+            <!-- Shoot Inquiry Form with Formspree Endpoint to arjunasok604@gmail.com -->
+            <form id="shoot-inquiry-form" onsubmit="handleDirectEmailSubmit(event)" class="space-y-6">
+              
+              <!-- Project Category -->
+              <div>
+                <label class="block font-mono-code text-xs uppercase text-zinc-400 mb-3">01. Select Project Type</label>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  <label class="cursor-pointer">
+                    <input type="radio" name="project_type" value="Commercial Film" class="peer sr-only" checked>
+                    <div class="glass-pill p-3 rounded-xl text-center text-xs font-mono-code text-zinc-400 peer-checked:border-amber-400 peer-checked:text-amber-300 peer-checked:bg-amber-400/10 transition">
+                      Commercial
+                    </div>
+                  </label>
+                  <label class="cursor-pointer">
+                    <input type="radio" name="project_type" value="Brand Narrative Film" class="peer sr-only">
+                    <div class="glass-pill p-3 rounded-xl text-center text-xs font-mono-code text-zinc-400 peer-checked:border-amber-400 peer-checked:text-amber-300 peer-checked:bg-amber-400/10 transition">
+                      Brand Film
+                    </div>
+                  </label>
+                  <label class="cursor-pointer">
+                    <input type="radio" name="project_type" value="Instagram Reels Campaign" class="peer sr-only">
+                    <div class="glass-pill p-3 rounded-xl text-center text-xs font-mono-code text-zinc-400 peer-checked:border-amber-400 peer-checked:text-amber-300 peer-checked:bg-amber-400/10 transition">
+                      Creative Reels
+                    </div>
+                  </label>
+                  <label class="cursor-pointer">
+                    <input type="radio" name="project_type" value="Cinematic Music Video" class="peer sr-only">
+                    <div class="glass-pill p-3 rounded-xl text-center text-xs font-mono-code text-zinc-400 peer-checked:border-amber-400 peer-checked:text-amber-300 peer-checked:bg-amber-400/10 transition">
+                      Music Video
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Contact & Name -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block font-mono-code text-xs uppercase text-zinc-400 mb-2">02. Your Name / Brand Entity *</label>
+                  <input type="text" id="client-name" name="name" required placeholder="e.g. Rahul Nair / Apex Media" 
+                         class="w-full px-4 py-3 rounded-xl glass-card text-xs font-mono-code text-white placeholder-zinc-600 focus:outline-none focus:border-amber-400 border border-zinc-800 transition">
+                </div>
+                <div>
+                  <label class="block font-mono-code text-xs uppercase text-zinc-400 mb-2">03. Your Email Address *</label>
+                  <input type="email" id="client-email" name="email" required placeholder="producer@domain.com" 
+                         class="w-full px-4 py-3 rounded-xl glass-card text-xs font-mono-code text-white placeholder-zinc-600 focus:outline-none focus:border-amber-400 border border-zinc-800 transition">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block font-mono-code text-xs uppercase text-zinc-400 mb-2">04. Phone / WhatsApp</label>
+                  <input type="text" id="client-phone" name="phone" placeholder="+91 98XXXXXXXX" 
+                         class="w-full px-4 py-3 rounded-xl glass-card text-xs font-mono-code text-white placeholder-zinc-600 focus:outline-none focus:border-amber-400 border border-zinc-800 transition">
+                </div>
+                <div>
+                  <label class="block font-mono-code text-xs uppercase text-zinc-400 mb-2">05. Instagram Handle / Website</label>
+                  <input type="text" id="client-social" name="social" placeholder="@yourhandle or URL" 
+                         class="w-full px-4 py-3 rounded-xl glass-card text-xs font-mono-code text-white placeholder-zinc-600 focus:outline-none focus:border-amber-400 border border-zinc-800 transition">
+                </div>
+              </div>
+
+              <!-- Budget Scope Slider -->
+              <div>
+                <div class="flex items-center justify-between font-mono-code text-xs mb-2">
+                  <label class="text-zinc-400 uppercase">06. Estimated Budget Range</label>
+                  <span id="budget-display" class="text-amber-400 font-bold">Standard Commercial (?35K - ?75K)</span>
+                </div>
+                <input id="budget-slider" type="range" min="1" max="4" step="1" value="2" 
+                       class="w-full accent-amber-400 bg-zinc-800 h-2 rounded-lg cursor-pointer">
+                <input type="hidden" id="budget-input" name="budget" value="Standard Commercial (?35K - ?75K)">
+                <div class="flex justify-between font-mono-code text-[10px] text-zinc-500 mt-1">
+                  <span>Reels Tier</span>
+                  <span>Standard</span>
+                  <span>Cinema Commercial</span>
+                  <span>High-Scale</span>
+                </div>
+              </div>
+
+              <!-- Message / Brief -->
+              <div>
+                <label class="block font-mono-code text-xs uppercase text-zinc-400 mb-2">07. Creative Vision & Shoot Location</label>
+                <textarea id="client-notes" name="message" rows="3" required placeholder="Describe the shoot concept, target dates in Aluva / Kerala, references..." 
+                          class="w-full px-4 py-3 rounded-xl glass-card text-xs font-mono-code text-white placeholder-zinc-600 focus:outline-none focus:border-amber-400 border border-zinc-800 transition resize-none"></textarea>
+              </div>
+
+              <!-- Submission Cluster -->
+              <div class="flex flex-col sm:flex-row items-center gap-3 pt-2">
+                <button type="submit" id="submit-btn" class="w-full sm:flex-1 py-4 px-6 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-zinc-950 font-mono-code text-xs font-bold uppercase tracking-wider hover:opacity-90 active:scale-95 transition flex items-center justify-center gap-2 shadow-lg">
+                  <span id="btn-idle" class="flex items-center gap-2">
+                    <i data-lucide="send" class="w-4 h-4"></i>
+                    <span>Transmit Inquiry to arjunasok604@gmail.com</span>
+                  </span>
+                  <span id="btn-loading" class="hidden flex items-center gap-2">
+                    <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
+                    <span>Transmitting to Studio Inbox...</span>
+                  </span>
+                </button>
+                
+                <!-- Quick Mailto Backup Button -->
+                <button type="button" onclick="triggerDirectMailtoFallback()" title="Open native mail client" class="w-full sm:w-auto px-4 py-4 rounded-xl glass-pill text-zinc-300 hover:text-amber-400 font-mono-code text-xs uppercase flex items-center justify-center gap-2 border border-white/10 hover:border-amber-400/40 transition">
+                  <i data-lucide="mail-plus" class="w-4 h-4 text-amber-400"></i>
+                  <span>Mail Client</span>
+                </button>
+              </div>
+
+              <!-- Live Submission Feedback / Status Window -->
+              <div id="form-feedback-message" class="hidden font-mono-code text-xs p-4 rounded-xl border"></div>
+
+            </form>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-zinc-900 bg-[#060608] py-12 px-6 sm:px-12 relative text-zinc-500 font-mono-code text-xs">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      
+      <div class="flex items-center gap-3">
+        <div class="w-7 h-7 rounded-full bg-amber-400/10 flex items-center justify-center text-amber-400 border border-amber-400/30">
+          <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+        </div>
+        <div>
+          <span class="text-zinc-200 font-syne font-bold uppercase tracking-wider">UNIVA LENS</span>
+          <span class="text-zinc-600 block text-[10px]">Aluva, Kerala • Dispatch: arjunasok604@gmail.com</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-6">
+        <a href="#hero" class="hover:text-amber-400 transition">Top</a>
+        <a href="#about" class="hover:text-amber-400 transition">Identity</a>
+        <a href="#showcase" class="hover:text-amber-400 transition">Works</a>
+        <a href="https://www.instagram.com/univalens?stkn=ZnB2NmY1aGJwNG52&utm_source=qr" target="_blank" rel="noopener noreferrer" class="hover:text-amber-400 transition text-amber-400 flex items-center gap-1">
+          <i data-lucide="instagram" class="w-3.5 h-3.5"></i> @univalens
+        </a>
+      </div>
+
+      <div class="text-[11px] text-zinc-600 text-center md:text-right">
+        © 2026 UNIVA LENS. Inquiries directed to arjunasok604@gmail.com<br>
+        Crafted with Optical Precision & DaVinci Resolve Color.
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Modal Video / Reel Player Simulator -->
+  <div id="video-preview-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl hidden flex items-center justify-center p-4 sm:p-8">
+    <div class="relative w-full max-w-4xl glass-card rounded-3xl overflow-hidden border border-amber-500/30 shadow-2xl flex flex-col">
+      <div class="px-6 py-4 border-b border-zinc-800 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="h-2.5 w-2.5 rounded-full bg-red-500 animate-ping"></span>
+          <span id="modal-project-title" class="font-syne text-base font-bold text-white uppercase">PROJECT PREVIEW</span>
+        </div>
+        <button onclick="closeVideoModal()" class="text-zinc-400 hover:text-white p-1 rounded-lg focus:outline-none">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="relative aspect-video bg-black flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="w-full h-full opacity-25 flex items-center justify-center gap-1.5 px-12" id="modal-waveform"></div>
+        </div>
+
+        <div class="relative z-10 text-center px-6">
+          <div class="w-16 h-16 rounded-full bg-amber-400 text-zinc-950 flex items-center justify-center mx-auto mb-4 shadow-xl shadow-amber-500/30 animate-pulse">
+            <i data-lucide="film" class="w-8 h-8"></i>
+          </div>
+          <h4 id="modal-meta-title" class="font-syne text-2xl font-bold text-white mb-2">Cinematic Preview</h4>
+          <p id="modal-gear-spec" class="text-xs font-mono-code text-amber-400 mb-6 max-w-md mx-auto">ARRI ALEXA MINI • 35MM T1.5</p>
+          
+          <a href="https://www.instagram.com/univalens?stkn=ZnB2NmY1aGJwNG52&utm_source=qr" target="_blank" rel="noopener noreferrer" 
+             class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-zinc-950 font-mono-code text-xs font-bold uppercase tracking-wider hover:scale-105 transition shadow-lg">
+            <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+            <span>Watch Full Cut on @univalens Instagram</span>
+            <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+          </a>
+        </div>
+
+        <div class="absolute top-0 left-0 w-full h-3 bg-black border-b border-zinc-900"></div>
+        <div class="absolute bottom-0 left-0 w-full h-3 bg-black border-t border-zinc-900"></div>
+      </div>
+
+      <div class="px-6 py-3 bg-[#08080c] border-t border-zinc-800 flex items-center justify-between text-[11px] font-mono-code text-zinc-500">
+        <span>AUDIO: 24-BIT / 48KHZ STEREO</span>
+        <span>LOCATION: ALUVA, KERALA</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    /* --- 1. Custom Cinema Smooth Hardware Cursor --- */
+    const cursorDot = document.getElementById('cursor-dot');
+    const cursorOutline = document.getElementById('cursor-outline');
+
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let outlineX = mouseX;
+    let outlineY = mouseY;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (cursorDot) {
+        cursorDot.style.left = `${mouseX}px`;
+        cursorDot.style.top = `${mouseY}px`;
+      }
+    });
+
+    function renderCursor() {
+      outlineX += (mouseX - outlineX) * 0.15;
+      outlineY += (mouseY - outlineY) * 0.15;
+      if (cursorOutline) {
+        cursorOutline.style.left = `${outlineX}px`;
+        cursorOutline.style.top = `${outlineY}px`;
+      }
+      requestAnimationFrame(renderCursor);
+    }
+    requestAnimationFrame(renderCursor);
+
+    /* --- 2. Live Timecode & Aluva IST Time Generator --- */
+    const timecodeDisplay = document.getElementById('live-timecode');
+    const istClockDisplay = document.getElementById('live-ist-clock');
+    let frames = 0;
+
+    function updateTimecode() {
+      const now = new Date();
+      frames = (frames + 1) % 24;
+      const hh = String(now.getHours()).padStart(2, '0');
+      const mm = String(now.getMinutes()).padStart(2, '0');
+      const ss = String(now.getSeconds()).padStart(2, '0');
+      const ff = String(frames).padStart(2, '0');
+
+      if (timecodeDisplay) {
+        timecodeDisplay.textContent = `${hh}:${mm}:${ss}:${ff}`;
+      }
+
+      if (istClockDisplay) {
+        const istString = now.toLocaleTimeString('en-US', {
+          timeZone: 'Asia/Kolkata',
+          hour12: true,
+          hour: 'numeric',
+          minute: 'numeric',
+          second: 'numeric'
+        });
+        istClockDisplay.textContent = `IST Local: ${istString} (Aluva, Kerala)`;
+      }
+    }
+    setInterval(updateTimecode, 1000 / 24);
+
+    /* --- 3. Ambient Audio Synthesizer (Web Audio API) --- */
+    let audioCtx = null;
+    let masterGain = null;
+    let humOscillator = null;
+
+    const soundToggleBtn = document.getElementById('sound-toggle-btn');
+    const soundStateText = document.getElementById('sound-state-text');
+    const audioBars = document.querySelectorAll('.audio-bar');
+
+    function initAudioEngine() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+
+        masterGain = audioCtx.createGain();
+        masterGain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        masterGain.connect(audioCtx.destination);
+
+        // 55Hz Warm cinematic sub drone
+        humOscillator = audioCtx.createOscillator();
+        humOscillator.type = 'sine';
+        humOscillator.frequency.setValueAtTime(55, audioCtx.currentTime);
+
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(140, audioCtx.currentTime);
+
+        humOscillator.connect(filter);
+        filter.connect(masterGain);
+        humOscillator.start();
+      } catch (err) {
+        console.warn('Audio engine standby mode.', err);
+      }
+    }
+
+    if (soundToggleBtn) {
+      soundToggleBtn.addEventListener('click', () => {
+        if (!audioCtx) {
+          initAudioEngine();
+          soundStateText.textContent = 'CINEMA SFX ON';
+          audioBars.forEach(b => b.classList.add('animate-pulse'));
+        } else if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+          soundStateText.textContent = 'CINEMA SFX ON';
+          audioBars.forEach(b => b.classList.add('animate-pulse'));
+        } else if (audioCtx.state === 'running') {
+          audioCtx.suspend();
+          soundStateText.textContent = 'SOUND OFF';
+          audioBars.forEach(b => b.classList.remove('animate-pulse'));
+        }
+      });
+    }
+
+    /* --- 4. GSAP Motion & ScrollTrigger Animations --- */
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.from('.hero-elem', {
+      y: 35,
+      opacity: 0,
+      duration: 1.0,
+      stagger: 0.16,
+      ease: 'power3.out',
+      delay: 0.2
+    });
+
+    gsap.to('#hero-aperture', {
+      scale: 1.35,
+      opacity: 0.08,
+      scrollTrigger: {
+        trigger: '#hero',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1
+      }
+    });
+
+    /* --- 5. Portfolio Filtering --- */
+    const filterButtons = document.querySelectorAll('.portfolio-filter-btn');
+    const portfolioCards = document.querySelectorAll('.portfolio-card');
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach(b => {
+          b.classList.remove('text-amber-400', 'border-amber-400/50');
+          b.classList.add('text-zinc-400');
+        });
+        btn.classList.add('text-amber-400', 'border-amber-400/50');
+        btn.classList.remove('text-zinc-400');
+
+        const filter = btn.getAttribute('data-filter');
+
+        portfolioCards.forEach(card => {
+          const category = card.getAttribute('data-category');
+          if (filter === 'all' || category === filter) {
+            gsap.to(card, { scale: 1, opacity: 1, duration: 0.35, display: 'block' });
+          } else {
+            gsap.to(card, { scale: 0.96, opacity: 0, duration: 0.25, display: 'none' });
+          }
+        });
+      });
+    });
+
+    /* --- 6. Interactive Aperture Slider --- */
+    const apertureSlider = document.getElementById('aperture-slider');
+    const apertureValDisplay = document.getElementById('aperture-val-display');
+    const apertureDofDisplay = document.getElementById('aperture-dof-display');
+
+    if (apertureSlider) {
+      apertureSlider.addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value);
+        apertureValDisplay.textContent = `f / ${val.toFixed(1)}`;
+        if (val <= 2.0) {
+          apertureDofDisplay.textContent = 'ULTRA SHALLOW BOKEH';
+        } else if (val <= 4.0) {
+          apertureDofDisplay.textContent = 'COMMERCIAL DEPTH';
+        } else if (val <= 8.0) {
+          apertureDofDisplay.textContent = 'STUDIO CRISP';
+        } else {
+          apertureDofDisplay.textContent = 'DEEP FOCUS (LANDSCAPE)';
+        }
+      });
+    }
+
+    /* --- 7. Budget Slider & Value Binding --- */
+    const budgetSlider = document.getElementById('budget-slider');
+    const budgetDisplay = document.getElementById('budget-display');
+    const budgetInput = document.getElementById('budget-input');
+    const budgetTiers = [
+      'Reels Tier (?15,000 - ?30,000)',
+      'Standard Commercial (?35,000 - ?75,000)',
+      'Cinema Commercial (?80,000 - ?1,50,000)',
+      'High-Scale Campaign / Custom (?1,50,000+)'
+    ];
+
+    if (budgetSlider && budgetDisplay) {
+      budgetSlider.addEventListener('input', (e) => {
+        const index = parseInt(e.target.value) - 1;
+        const selected = budgetTiers[index] || budgetTiers[1];
+        budgetDisplay.textContent = selected;
+        if (budgetInput) budgetInput.value = selected;
+      });
+    }
+
+    /* --- 8. Email Backend Submission to arjunasok604@gmail.com --- */
+    async function handleDirectEmailSubmit(e) {
+      e.preventDefault();
+
+      const btnIdle = document.getElementById('btn-idle');
+      const btnLoading = document.getElementById('btn-loading');
+      const submitBtn = document.getElementById('submit-btn');
+      const feedback = document.getElementById('form-feedback-message');
+
+      const projectType = document.querySelector('input[name="project_type"]:checked')?.value || 'Commercial';
+      const name = document.getElementById('client-name')?.value || '';
+      const email = document.getElementById('client-email')?.value || '';
+      const phone = document.getElementById('client-phone')?.value || 'Not provided';
+      const social = document.getElementById('client-social')?.value || 'Not provided';
+      const budget = budgetInput?.value || 'Standard';
+      const message = document.getElementById('client-notes')?.value || '';
+
+      // Set UI to loading state
+      btnIdle.classList.add('hidden');
+      btnLoading.classList.remove('hidden');
+      submitBtn.disabled = true;
+
+      // Backend endpoint payload configured for arjunasok604@gmail.com
+      const endpoint = 'https://formspree.io/f/mqkenobz'; // Formspree route pointing to target recipient
+
+      const payload = {
+        _replyto: email,
+        email: email,
+        name: name,
+        phone: phone,
+        social_handle: social,
+        project_type: projectType,
+        budget_tier: budget,
+        message: message,
+        _subject: `New UNIVA LENS Film Commission: ${name} (${projectType})`,
+        recipient_target: 'arjunasok604@gmail.com'
+      };
+
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          // Success Screen
+          feedback.className = 'font-mono-code text-xs p-5 rounded-xl border border-emerald-500/50 bg-emerald-950/40 text-emerald-300';
+          feedback.innerHTML = `
+            <div class="flex items-start gap-3">
+              <span class="text-base text-emerald-400">?</span>
+              <div>
+                <strong class="font-bold text-white uppercase tracking-wider">TRANSMISSION DELIVERED SUCCESSFULLY</strong>
+                <p class="mt-1 text-zinc-300">Your brief has been forwarded to our director at <strong>arjunasok604@gmail.com</strong>. We will review the creative requirements and contact you within 24 hours.</p>
+                <div class="mt-3 flex items-center gap-3">
+                  <a href="https://www.instagram.com/univalens?stkn=ZnB2NmY1aGJwNG52&utm_source=qr" target="_blank" class="text-amber-400 hover:underline flex items-center gap-1">
+                    Follow up on Instagram @univalens ?
+                  </a>
+                </div>
+              </div>
+            </div>
+          `;
+          feedback.classList.remove('hidden');
+          document.getElementById('shoot-inquiry-form').reset();
+        } else {
+          throw new Error('Endpoint returned status: ' + response.status);
+        }
+      } catch (error) {
+        console.warn('Primary dispatch channel failed or network offline, triggering direct mailto link generator...', error);
+        
+        // Graceful Instant Fallback with mailto to arjunasok604@gmail.com
+        const subject = encodeURIComponent(`UNIVA LENS Project Inquiry - ${name} [${projectType}]`);
+        const bodyContent = encodeURIComponent(
+          `Project Type: ${projectType}\n` +
+          `Client / Brand: ${name}\n` +
+          `Email: ${email}\n` +
+          `Phone: ${phone}\n` +
+          `Social / Handle: ${social}\n` +
+          `Budget: ${budget}\n\n` +
+          `Creative Vision & Location Notes:\n${message}\n`
+        );
+        const mailtoUrl = `mailto:arjunasok604@gmail.com?subject=${subject}&body=${bodyContent}`;
+
+        feedback.className = 'font-mono-code text-xs p-5 rounded-xl border border-amber-500/50 bg-amber-950/40 text-amber-200';
+        feedback.innerHTML = `
+          <div class="flex items-start gap-3">
+            <span class="text-base text-amber-400">?</span>
+            <div>
+              <strong class="font-bold text-white uppercase tracking-wider">READY FOR DIRECT EMAIL CLIENT DISPATCH</strong>
+              <p class="mt-1 text-zinc-300">Click below to send the compiled shoot inquiry straight to <strong>arjunasok604@gmail.com</strong> via your default email application:</p>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <a href="${mailtoUrl}" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-400 text-zinc-950 font-bold uppercase hover:bg-amber-300 transition">
+                  Launch Email to arjunasok604@gmail.com
+                </a>
+                <a href="https://www.instagram.com/univalens?stkn=ZnB2NmY1aGJwNG52&utm_source=qr" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg glass-pill text-zinc-200 hover:text-amber-400 transition">
+                  DM @univalens on Instagram
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+        feedback.classList.remove('hidden');
+
+        // Automatically open mail client
+        window.location.href = mailtoUrl;
+      } finally {
+        btnIdle.classList.remove('hidden');
+        btnLoading.classList.add('hidden');
+        submitBtn.disabled = false;
+      }
+    }
+
+    /* --- 9. Direct Native Mailto Fallback Helper --- */
+    function triggerDirectMailtoFallback() {
+      const name = document.getElementById('client-name')?.value || 'Client';
+      const email = document.getElementById('client-email')?.value || 'Not provided';
+      const projectType = document.querySelector('input[name="project_type"]:checked')?.value || 'Commercial';
+      const budget = budgetInput?.value || 'Standard';
+      const message = document.getElementById('client-notes')?.value || 'Creative shoot details.';
+
+      const subject = encodeURIComponent(`UNIVA LENS Film Commission - ${name}`);
+      const body = encodeURIComponent(
+        `Dear UNIVA LENS Team,\n\n` +
+        `Project: ${projectType}\n` +
+        `Brand / Producer: ${name}\n` +
+        `Email: ${email}\n` +
+        `Budget: ${budget}\n\n` +
+        `Shoot Notes:\n${message}\n\n` +
+        `Sent via UNIVA LENS website.`
+      );
+      window.location.href = `mailto:arjunasok604@gmail.com?subject=${subject}&body=${body}`;
+    }
+
+    /* --- 10. Video Modal Simulation Logic --- */
+    const videoModal = document.getElementById('video-preview-modal');
+    const modalProjectTitle = document.getElementById('modal-project-title');
+    const modalMetaTitle = document.getElementById('modal-meta-title');
+    const modalGearSpec = document.getElementById('modal-gear-spec');
+    const modalWaveform = document.getElementById('modal-waveform');
+
+    if (modalWaveform) {
+      modalWaveform.innerHTML = '';
+      for (let i = 0; i < 34; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'w-1 bg-amber-400 rounded-full';
+        bar.style.height = `${Math.floor(Math.random() * 55) + 12}px`;
+        modalWaveform.appendChild(bar);
+      }
+    }
+
+    function openVideoModal(title, meta, spec) {
+      if (!videoModal) return;
+      modalProjectTitle.textContent = title;
+      modalMetaTitle.textContent = meta;
+      modalGearSpec.textContent = spec;
+      videoModal.classList.remove('hidden');
+    }
+
+    function closeVideoModal() {
+      if (videoModal) videoModal.classList.add('hidden');
+    }
+
+    /* --- 11. Mobile Navigation Drawer --- */
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileDrawer = document.getElementById('mobile-drawer');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+
+    if (mobileMenuBtn && mobileDrawer) {
+      mobileMenuBtn.addEventListener('click', () => {
+        mobileDrawer.classList.toggle('hidden');
+      });
+
+      mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          mobileDrawer.classList.add('hidden');
+        });
+      });
+    }
+  </script>
+</body>
+</html>
